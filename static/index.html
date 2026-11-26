@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GRIMOIRE // TECHNOWITCH</title>
+  <link rel="icon" type="image/png" href="/static/plates/delphic-seal.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/styles.css" />
+</head>
+<body>
+  <div class="ambient-wash" aria-hidden="true"></div>
+  <div class="grain-overlay" aria-hidden="true"></div>
+
+  <!-- TOP BRASS TELEMETRY RIBBON -->
+  <header class="brass-ribbon" id="brass-ribbon">
+    <div class="ribbon-brand">
+      <button class="icon-brass-btn" id="btn-toggle-archive" title="Toggle Scriptorium Archive (Ctrl+B)" aria-label="Toggle Scriptorium Archive">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.3">
+          <rect x="1.5" y="2" width="13" height="12" rx="1"/>
+          <line x1="5.5" y1="2" x2="5.5" y2="14"/>
+          <line x1="8" y1="5.5" x2="12" y2="5.5"/>
+          <line x1="8" y1="8.5" x2="11" y2="8.5"/>
+        </svg>
+      </button>
+      <div class="brand-emblem-wrap">
+        <img src="/static/plates/delphic-seal.png" alt="Delphic Seal" class="brand-seal" />
+      </div>
+      <div class="brand-titles">
+        <span class="brand-main">GRIMOIRE</span>
+        <span class="brand-sep">//</span>
+        <span class="brand-sub">TECHNOWITCH</span>
+      </div>
+    </div>
+
+    <div class="ribbon-telemetry" id="ribbon-telemetry">
+      <!-- Undergrowth Tub -->
+      <div class="brass-pill" id="pill-undergrowth" title="Undergrowth fruiting chamber telemetry">
+        <span class="pill-led led-verdigris" id="led-undergrowth"></span>
+        <span class="pill-label">UNDERGROWTH</span>
+        <span class="pill-value mono" id="val-undergrowth">—% RH · — ppm · —°C</span>
+      </div>
+
+      <!-- Hearth Light -->
+      <div class="brass-pill" id="pill-lights" title="Ambient room lighting">
+        <span class="pill-led led-ambient" id="led-lights"></span>
+        <span class="pill-label">HEARTH</span>
+        <span class="pill-value" id="val-lights">Sensing lamps…</span>
+      </div>
+
+      <!-- Celestial & Planetary Hour -->
+      <div class="brass-pill" id="pill-celestial" title="Lunar phase & Chaldean planetary hour">
+        <span class="pill-value" id="val-celestial">☽ — · ♄ —</span>
+      </div>
+
+      <!-- Pythia Vessel Status + Wake/Banish -->
+      <div class="brass-pill vessel-pill" id="pill-vessel" data-state="dormant">
+        <span class="pill-led" id="led-vessel"></span>
+        <span class="pill-label">PYTHIA</span>
+        <span class="pill-value mono" id="val-vessel">Dormant</span>
+        <button class="vessel-action-btn" id="btn-vessel-toggle" type="button" title="Wake or banish Fallen Gemma in LM Studio">
+          Wake
+        </button>
+      </div>
+
+      <!-- Collapse/Expand Chasm -->
+      <button class="brass-toggle-chasm" id="btn-toggle-chasm" type="button" title="Toggle The Chasm (Ctrl+\)">
+        <span class="chasm-toggle-glyph">⫯</span>
+        <span id="label-toggle-chasm">The Chasm</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MAIN SANCTUARY SPLIT -->
+  <main class="sanctuary-workspace" id="sanctuary-workspace">
+    <!-- LEFT SANCTUARY: THE SCRIPTORIUM -->
+    <section class="scriptorium-pane" id="scriptorium-pane" aria-label="The Scriptorium">
+      <!-- Collapsible Archive Sidebar -->
+      <aside class="archive-sidebar" id="archive-sidebar">
+        <div class="archive-header">
+          <span class="section-kicker">FOLIO ARCHIVE</span>
+          <button class="brass-mini-btn" id="btn-jump-today" type="button" title="Open today's folio">+ Today</button>
+        </div>
+        <div class="archive-search-wrap">
+          <input
+            type="search"
+            id="archive-search"
+            class="archive-search-input"
+            placeholder="Search folios & inscriptions…"
+            autocomplete="off"
+          />
+        </div>
+        <div class="archive-list" id="archive-list" role="list">
+          <!-- Populated dynamically -->
+        </div>
+      </aside>
+
+      <!-- Writing Folio Column -->
+      <div class="folio-stage">
+        <header class="folio-header">
+          <div class="folio-nav">
+            <button class="nav-arrow-btn" id="btn-prev-day" type="button" title="Previous day (Alt+←)" aria-label="Previous day">‹</button>
+            <div class="folio-date-group">
+              <h1 class="folio-human-date" id="folio-human-date">Wednesday, 25 November 2026</h1>
+              <div class="folio-submeta">
+                <span class="mono folio-file-tag" id="folio-file-tag">2026-11-25.md</span>
+                <button class="today-return-chip hidden" id="btn-return-today" type="button">Return to Today</button>
+              </div>
+            </div>
+            <button class="nav-arrow-btn" id="btn-next-day" type="button" title="Next day (Alt+→)" aria-label="Next day">›</button>
+          </div>
+
+          <div class="folio-status-bar">
+            <span class="mono word-count-tag" id="folio-word-count">0 words</span>
+            <span class="brass-dot-sep">·</span>
+            <span class="mono save-status-tag" id="folio-save-status">Unwritten folio</span>
+            <div class="mode-segmented" role="group" aria-label="Editor view mode">
+              <button class="seg-btn active" id="btn-mode-write" type="button" title="Fountain ink editor">Ink</button>
+              <button class="seg-btn" id="btn-mode-preview" type="button" title="Typeset folio preview (Ctrl+E)">Plate</button>
+            </div>
+          </div>
+        </header>
+
+        <div class="folio-body">
+          <textarea
+            id="journal-editor"
+            class="journal-editor"
+            spellcheck="true"
+            placeholder="Lay ink upon cotton rag…"
+          ></textarea>
+          <article
+            id="journal-preview"
+            class="journal-preview prose-symbolist hidden"
+            aria-live="polite"
+          ></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT SANCTUARY: THE CHASM -->
+    <section class="chasm-pane" id="chasm-pane" aria-label="The Chasm">
+      <!-- Session Selector Bar -->
+      <header class="chasm-topbar">
+        <div class="chasm-session-picker">
+          <span class="section-kicker">ORACLE THREAD</span>
+          <select id="oracle-session-select" class="brass-select" aria-label="Select Oracle Session">
+            <option value="">Today's Chasm Rite</option>
+          </select>
+        </div>
+        <div class="chasm-topbar-actions">
+          <button class="brass-mini-btn" id="btn-new-ritual" type="button" title="Begin a fresh ritual consultation">
+            + New Ritual Thread
+          </button>
+          <button class="icon-brass-btn subtle-danger hidden" id="btn-delete-session" type="button" title="Dissolve this ritual thread">
+            ✕
+          </button>
+        </div>
+      </header>
+
+      <!-- Scrollable Chasm Interior -->
+      <div class="chasm-scroll" id="chasm-scroll">
+        <!-- EMPTY / ALTAR INVOCATION STATE -->
+        <div class="chasm-altar" id="chasm-altar">
+          <div class="pythia-plate-frame">
+            <div class="corner-tick tl"></div>
+            <div class="corner-tick tr"></div>
+            <div class="corner-tick bl"></div>
+            <div class="corner-tick br"></div>
+            <img
+              src="/static/plates/pythia-chasm.png"
+              alt="The Pythia enthroned above the mycelial fissure"
+              class="pythia-plate-img"
+            />
+            <div class="plate-caption">
+              <span>DELPHIC FISSURE · THREE-TIER SORTILEGE</span>
+            </div>
+          </div>
+
+          <div class="altar-controls">
+            <div class="spread-selector" role="radiogroup" aria-label="Spread Mode">
+              <button
+                type="button"
+                class="spread-option active"
+                data-mode="daily"
+                id="spread-opt-daily"
+              >
+                <span class="spread-opt-title">Daily Rite</span>
+                <span class="spread-opt-desc">Thoth Card · I Ching · Elder Futhark</span>
+              </button>
+              <button
+                type="button"
+                class="spread-option"
+                data-mode="trinity"
+                id="spread-opt-trinity"
+              >
+                <span class="spread-opt-title">Thoth Trinity</span>
+                <span class="spread-opt-desc">Three Cards · Root · Crux · Vector</span>
+              </button>
+            </div>
+
+            <div class="fissure-question-wrap">
+              <input
+                type="text"
+                id="fissure-question"
+                class="fissure-question-input"
+                placeholder="Whisper an inquiry into the fissure, or cast blind…"
+                autocomplete="off"
+              />
+            </div>
+
+            <button type="button" class="consult-chasm-btn" id="btn-consult-chasm">
+              <img src="/static/plates/delphic-seal.png" alt="" class="btn-seal-icon" />
+              <span>Consult the Chasm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- ACTIVE READING & TALISMANS STATE -->
+        <div class="chasm-reading hidden" id="chasm-reading">
+          <!-- Multi-Stage Ritual Loading Banner -->
+          <div class="ritual-stage-banner hidden" id="ritual-stage-banner">
+            <img src="/static/plates/delphic-seal.png" alt="" class="ritual-spinner-seal" />
+            <div class="ritual-stage-copy">
+              <span class="mono ritual-stage-code" id="ritual-stage-code">SORTILEGE</span>
+              <span class="ritual-stage-label" id="ritual-stage-label">Casting hardware entropy…</span>
+            </div>
+          </div>
+
+          <!-- Cast Talismans Display -->
+          <section class="talismans-section hidden" id="talismans-section" aria-label="Cast Talismans">
+            <div class="talismans-meta-bar">
+              <div class="talismans-meta-left">
+                <span class="mono talisman-mode-badge" id="talisman-mode-badge">DAILY RITE</span>
+                <span class="mono entropy-stamp" id="entropy-stamp" title="Cryptographic OS entropy seed">0x—</span>
+              </div>
+              <button
+                type="button"
+                class="entrails-toggle-btn"
+                id="btn-toggle-entrails"
+                aria-expanded="false"
+              >
+                <span>Inspect Haruspex Entrails</span>
+                <span class="mono quiet-pill" id="quiet-count-pill">0 [quiet]</span>
+              </button>
+            </div>
+
+            <!-- Collapsible Haruspex Smoke Drawer -->
+            <div class="entrails-drawer hidden" id="entrails-drawer">
+              <div class="entrails-drawer-head">
+                <span class="section-kicker">HIGH HARUSPEX SMOKE PACKET</span>
+                <span class="mono entrails-model-meta" id="entrails-model-meta"></span>
+              </div>
+              <pre class="smoke-packet-pre" id="smoke-packet-pre">Awaiting ritual distillation…</pre>
+            </div>
+
+            <!-- Talismans Grid -->
+            <div class="talismans-grid" id="talismans-grid">
+              <!-- Rendered dynamically: Thoth Card(s), SVG I Ching Hexagram, Elder Futhark Rune -->
+            </div>
+          </section>
+
+          <!-- Error Banner if any -->
+          <div class="chasm-error-box hidden" id="chasm-error-box"></div>
+
+          <!-- The Daily Omen -->
+          <article class="omen-vessel hidden" id="omen-vessel">
+            <header class="omen-vessel-head">
+              <div class="omen-head-titles">
+                <span class="section-kicker">THE OMEN OF THE FISSURE</span>
+                <p class="omen-question-epigraph hidden" id="omen-question-epigraph"></p>
+              </div>
+              <button
+                type="button"
+                class="inscribe-btn"
+                id="btn-inscribe-omen"
+                title="Inscribe full omen (or highlighted passage) into current Scriptorium page"
+              >
+                ✒ Inscribe to Page
+              </button>
+            </header>
+            <div class="omen-body prose-symbolist" id="omen-body"></div>
+          </article>
+
+          <!-- Interactive Pythia Chat Thread -->
+          <div class="pythia-chat-thread" id="pythia-chat-thread">
+            <!-- Messages rendered dynamically -->
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Pythia Chat Composer (visible when reading is active) -->
+      <footer class="chasm-composer hidden" id="chasm-composer">
+        <div class="quick-cast-bar">
+          <span class="mono quick-cast-hint">DRAW INTO THREAD:</span>
+          <button type="button" class="cast-chip" data-cast="card">+ Card</button>
+          <button type="button" class="cast-chip" data-cast="rune">+ Rune</button>
+          <button type="button" class="cast-chip" data-cast="iching">+ Hexagram</button>
+        </div>
+        <div class="composer-row">
+          <textarea
+            id="chat-input"
+            class="chat-input"
+            rows="1"
+            placeholder="Speak back into the chasm…"
+          ></textarea>
+          <button type="button" class="chat-send-btn" id="btn-send-chat" title="Send to the Pythia (Enter)">
+            Invoke
+          </button>
+        </div>
+      </footer>
+    </section>
+  </main>
+
+  <!-- Subtle Toast Notification -->
+  <div class="brass-toast hidden" id="brass-toast" role="status" aria-live="polite"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>

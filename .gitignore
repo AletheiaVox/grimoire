@@ -1,0 +1,23 @@
+# Secrets & local household wiring
+.env
+.env.*
+!.env.example
+
+# Runtime SQLite & local journal/digest data
+data/
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+
+# Python & OS artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+*.log
+.DS_Store
+Thumbs.db
+desktop.ini

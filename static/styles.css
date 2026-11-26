@@ -1,0 +1,1617 @@
+/* ==========================================================================
+   GRIMOIRE // TECHNOWITCH
+   Fin-de-Siècle Symbolist Library × Tarnished Brass Lab Instrument
+   ========================================================================== */
+
+:root {
+  --bg-obsidian: #080709;
+  --bg-vellum: #0F0D12;
+  --bg-altar: #15121A;
+  --bg-elevated: #1C1823;
+
+  --ink-bone: #E6DEC8;
+  --ink-warm: #F1EAD7;
+  --ink-ash: #9B9080;
+  --ink-muted: #675E52;
+
+  --brass-bright: #CCA962;
+  --brass: #A88948;
+  --brass-dim: #6E582C;
+  --brass-hairline: rgba(168, 137, 72, 0.26);
+  --brass-faint: rgba(168, 137, 72, 0.12);
+
+  --oxblood-deep: #6E1E2A;
+  --oxblood: #9E3344;
+  --oxblood-bright: #C84B5F;
+  --oxblood-wash: rgba(158, 51, 68, 0.16);
+
+  --verdigris: #4A8B71;
+  --verdigris-bright: #67B596;
+  --verdigris-wash: rgba(74, 139, 113, 0.16);
+
+  --ambient-light: #A88948;
+
+  --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-display: 'Cinzel', 'Times New Roman', serif;
+  --font-mono: 'JetBrains Mono', Consolas, monospace;
+
+  --ribbon-h: 52px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+  background-color: var(--bg-obsidian);
+  color: var(--ink-bone);
+  font-family: var(--font-serif);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(158, 51, 68, 0.45);
+  color: var(--ink-warm);
+}
+
+/* Custom subtle scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(110, 88, 44, 0.38);
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--brass);
+}
+
+.hidden {
+  display: none !important;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+/* Atmospheric Ambient Wash & Paper Grain */
+.ambient-wash {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  background:
+    radial-gradient(ellipse 65% 28% at 52% -6%, color-mix(in srgb, var(--ambient-light) 15%, transparent), transparent 72%),
+    radial-gradient(circle at 82% 88%, rgba(110, 30, 42, 0.09), transparent 55%);
+  transition: background 1.6s ease;
+}
+
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* ==========================================================================
+   TOP BRASS TELEMETRY RIBBON
+   ========================================================================== */
+
+.brass-ribbon {
+  position: relative;
+  z-index: 20;
+  height: var(--ribbon-h);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 0 16px;
+  background: linear-gradient(180deg, #131018 0%, #0B090E 100%);
+  border-bottom: 1px solid var(--brass-dim);
+  box-shadow:
+    0 1px 0 rgba(0, 0, 0, 0.85),
+    inset 0 -1px 0 rgba(204, 169, 98, 0.08);
+}
+
+.ribbon-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.brand-emblem-wrap {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  padding: 2px;
+  border: 1px solid var(--brass-dim);
+  background: var(--bg-obsidian);
+  box-shadow: 0 0 12px rgba(168, 137, 72, 0.16);
+  flex-shrink: 0;
+}
+
+.brand-seal {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+}
+
+.brand-titles {
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+  white-space: nowrap;
+}
+
+.brand-main {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--ink-bone);
+}
+
+.brand-sep {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--brass-dim);
+}
+
+.brand-sub {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.16em;
+  color: var(--brass);
+}
+
+.ribbon-telemetry {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.brass-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 30px;
+  padding: 0 11px;
+  background: rgba(21, 18, 26, 0.86);
+  border: 1px solid rgba(110, 88, 44, 0.55);
+  border-radius: 2px;
+  white-space: nowrap;
+  font-size: 12.5px;
+  color: var(--ink-bone);
+  box-shadow: inset 0 1px 0 rgba(230, 222, 200, 0.03);
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.brass-pill:hover {
+  border-color: var(--brass);
+  background: var(--bg-elevated);
+}
+
+.pill-label {
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  letter-spacing: 0.14em;
+  color: var(--ink-ash);
+}
+
+.pill-value {
+  font-size: 12px;
+  color: var(--ink-bone);
+}
+
+.pill-value.mono {
+  font-size: 11.2px;
+  letter-spacing: 0.02em;
+}
+
+.pill-led {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  background: var(--ink-muted);
+}
+
+.led-verdigris {
+  background: var(--verdigris-bright);
+  box-shadow: 0 0 7px var(--verdigris);
+}
+
+.led-ambient {
+  background: var(--ambient-light);
+  box-shadow: 0 0 9px var(--ambient-light);
+  transition: background 0.8s ease, box-shadow 0.8s ease;
+}
+
+/* Vessel Status Pill States */
+.vessel-pill[data-state="awake"] #led-vessel {
+  background: var(--verdigris-bright);
+  box-shadow: 0 0 8px var(--verdigris-bright);
+}
+.vessel-pill[data-state="loading"] #led-vessel,
+.vessel-pill[data-state="waking"] #led-vessel {
+  background: var(--brass-bright);
+  box-shadow: 0 0 9px var(--brass-bright);
+  animation: pulseEmber 1.3s infinite ease-in-out;
+}
+.vessel-pill[data-state="dormant"] #led-vessel {
+  background: var(--brass-dim);
+  box-shadow: 0 0 5px rgba(168, 137, 72, 0.35);
+}
+.vessel-pill[data-state="server_off"] #led-vessel {
+  background: var(--oxblood);
+  box-shadow: 0 0 7px var(--oxblood);
+}
+
+.vessel-action-btn {
+  margin-left: 3px;
+  padding: 2px 7px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  background: rgba(168, 137, 72, 0.12);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.vessel-action-btn:hover:not(:disabled) {
+  background: rgba(168, 137, 72, 0.26);
+  border-color: var(--brass-bright);
+  color: var(--ink-warm);
+}
+
+.vessel-pill[data-state="awake"] .vessel-action-btn:hover:not(:disabled) {
+  background: var(--oxblood-wash);
+  border-color: var(--oxblood);
+  color: #F2C6CD;
+}
+
+.vessel-action-btn:disabled {
+  opacity: 0.45;
+  cursor: wait;
+}
+
+.brass-toggle-chasm {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 30px;
+  padding: 0 11px;
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  background: linear-gradient(180deg, rgba(168, 137, 72, 0.14), rgba(110, 30, 42, 0.14));
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+}
+
+.brass-toggle-chasm:hover {
+  border-color: var(--brass-bright);
+  color: var(--ink-warm);
+}
+
+.icon-brass-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  background: transparent;
+  color: var(--ink-ash);
+  border: 1px solid rgba(110, 88, 44, 0.45);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.icon-brass-btn:hover {
+  color: var(--brass-bright);
+  border-color: var(--brass);
+  background: rgba(168, 137, 72, 0.08);
+}
+
+.icon-brass-btn.subtle-danger:hover {
+  color: var(--oxblood-bright);
+  border-color: var(--oxblood);
+  background: var(--oxblood-wash);
+}
+
+/* ==========================================================================
+   MAIN SANCTUARY WORKSPACE SPLIT
+   ========================================================================== */
+
+.sanctuary-workspace {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  height: calc(100vh - var(--ribbon-h));
+  width: 100%;
+  overflow: hidden;
+}
+
+.scriptorium-pane {
+  flex: 0 0 58%;
+  width: 58%;
+  display: flex;
+  height: 100%;
+  background: var(--bg-obsidian);
+  border-right: 1px solid var(--brass-dim);
+  transition: flex-basis 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1);
+  min-width: 0;
+}
+
+.chasm-pane {
+  flex: 0 0 42%;
+  width: 42%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: linear-gradient(180deg, var(--bg-vellum) 0%, #0A080D 100%);
+  transition: flex-basis 0.32s cubic-bezier(0.22, 1, 0.36, 1), width 0.32s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+  min-width: 0;
+}
+
+/* Collapsed Chasm => 100% Centered Scriptorium */
+.sanctuary-workspace.chasm-collapsed .scriptorium-pane {
+  flex: 1 1 100%;
+  width: 100%;
+  border-right: none;
+}
+
+.sanctuary-workspace.chasm-collapsed .chasm-pane {
+  flex: 0 0 0%;
+  width: 0;
+  opacity: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.section-kicker {
+  font-family: var(--font-display);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--brass);
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   SCRIPTORIUM ARCHIVE SIDEBAR
+   ========================================================================== */
+
+.archive-sidebar {
+  width: 264px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg-vellum);
+  border-right: 1px solid var(--brass-hairline);
+  transition: margin-left 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+}
+
+.archive-sidebar.collapsed {
+  margin-left: -264px;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.archive-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 14px 10px;
+  border-bottom: 1px solid rgba(168, 137, 72, 0.14);
+}
+
+.brass-mini-btn {
+  padding: 4px 9px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  background: rgba(168, 137, 72, 0.09);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  white-space: nowrap;
+}
+
+.brass-mini-btn:hover {
+  background: rgba(168, 137, 72, 0.2);
+  border-color: var(--brass-bright);
+  color: var(--ink-warm);
+}
+
+.archive-search-wrap {
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(168, 137, 72, 0.12);
+}
+
+.archive-search-input {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--bg-altar);
+  border: 1px solid rgba(110, 88, 44, 0.45);
+  border-radius: 2px;
+  color: var(--ink-bone);
+  font-family: var(--font-serif);
+  font-size: 15px;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.archive-search-input::placeholder {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.archive-search-input:focus {
+  border-color: var(--brass);
+}
+
+.archive-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 6px 0;
+}
+
+.archive-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 11px 14px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  border-bottom: 1px solid rgba(168, 137, 72, 0.08);
+  color: var(--ink-bone);
+  cursor: pointer;
+  transition: background 0.16s ease, border-color 0.16s ease;
+}
+
+.archive-item:hover {
+  background: rgba(21, 18, 26, 0.8);
+}
+
+.archive-item.active {
+  background: linear-gradient(90deg, rgba(158, 51, 68, 0.16), rgba(21, 18, 26, 0.55));
+  border-left-color: var(--brass-bright);
+}
+
+.archive-item-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.archive-item-date {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  color: var(--ink-warm);
+}
+
+.archive-item-words {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--ink-ash);
+}
+
+.archive-item-preview {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  line-height: 1.38;
+  color: var(--ink-ash);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.archive-empty {
+  padding: 24px 16px;
+  text-align: center;
+  font-style: italic;
+  color: var(--ink-muted);
+  font-size: 15px;
+}
+
+/* ==========================================================================
+   SCRIPTORIUM FOLIO WRITING SURFACE
+   ========================================================================== */
+
+.folio-stage {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  background:
+    radial-gradient(ellipse 80% 50% at 50% 0%, rgba(28, 23, 34, 0.45), transparent 70%),
+    var(--bg-obsidian);
+}
+
+.folio-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 28px 12px;
+  border-bottom: 1px solid var(--brass-hairline);
+  flex-wrap: wrap;
+}
+
+.folio-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.nav-arrow-btn {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(21, 18, 26, 0.7);
+  border: 1px solid rgba(110, 88, 44, 0.45);
+  border-radius: 2px;
+  color: var(--brass);
+  font-family: var(--font-serif);
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.nav-arrow-btn:hover {
+  color: var(--ink-warm);
+  border-color: var(--brass-bright);
+  background: rgba(168, 137, 72, 0.14);
+}
+
+.folio-date-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.folio-human-date {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--ink-warm);
+}
+
+.folio-submeta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.folio-file-tag {
+  font-size: 10.5px;
+  color: var(--ink-muted);
+}
+
+.today-return-chip {
+  padding: 1px 6px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  color: var(--brass-bright);
+  background: rgba(168, 137, 72, 0.12);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.folio-status-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.word-count-tag {
+  font-size: 11px;
+  color: var(--ink-ash);
+}
+
+.brass-dot-sep {
+  color: var(--brass-dim);
+}
+
+.save-status-tag {
+  font-size: 11px;
+  color: var(--brass);
+  transition: color 0.25s ease;
+}
+
+.save-status-tag.saving {
+  color: var(--brass-bright);
+}
+
+.save-status-tag.error {
+  color: var(--oxblood-bright);
+}
+
+.mode-segmented {
+  display: inline-flex;
+  border: 1px solid rgba(110, 88, 44, 0.55);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-left: 4px;
+}
+
+.seg-btn {
+  padding: 3px 9px;
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  background: var(--bg-vellum);
+  color: var(--ink-ash);
+  border: none;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.seg-btn.active {
+  background: rgba(168, 137, 72, 0.22);
+  color: var(--ink-warm);
+}
+
+.folio-body {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  justify-content: center;
+  padding: 32px 36px 56px;
+}
+
+.journal-editor {
+  width: 100%;
+  max-width: 70ch;
+  min-height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  resize: none;
+  color: var(--ink-bone);
+  caret-color: var(--brass-bright);
+  font-family: var(--font-serif);
+  font-size: 20.5px;
+  line-height: 1.76;
+  letter-spacing: 0.008em;
+  padding: 0 4px 120px;
+}
+
+.journal-editor::placeholder {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.journal-preview {
+  width: 100%;
+  max-width: 70ch;
+  font-size: 20.5px;
+  line-height: 1.76;
+  padding-bottom: 120px;
+}
+
+/* ==========================================================================
+   THE CHASM — RIGHT ORACLE SANCTUARY
+   ========================================================================== */
+
+.chasm-topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 11px 16px;
+  background: rgba(15, 13, 18, 0.92);
+  border-bottom: 1px solid var(--brass-hairline);
+  flex-shrink: 0;
+}
+
+.chasm-session-picker {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  flex: 1;
+}
+
+.brass-select {
+  flex: 1;
+  min-width: 0;
+  max-width: 280px;
+  padding: 5px 10px;
+  background: var(--bg-altar);
+  color: var(--ink-bone);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  font-family: var(--font-serif);
+  font-size: 15px;
+  outline: none;
+  cursor: pointer;
+}
+
+.brass-select:focus {
+  border-color: var(--brass-bright);
+}
+
+.chasm-topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.chasm-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 20px 28px;
+}
+
+/* Altar Empty State */
+.chasm-altar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-width: 440px;
+  margin: 4px auto 16px;
+}
+
+.pythia-plate-frame {
+  position: relative;
+  width: min(236px, 62%);
+  aspect-ratio: 9 / 16;
+  padding: 6px;
+  background: var(--bg-obsidian);
+  border: 1px solid var(--brass-dim);
+  box-shadow:
+    0 18px 42px rgba(0, 0, 0, 0.72),
+    0 0 28px rgba(110, 30, 42, 0.2);
+  margin-bottom: 18px;
+}
+
+.corner-tick {
+  position: absolute;
+  width: 9px;
+  height: 9px;
+  border-color: var(--brass-bright);
+  border-style: solid;
+  pointer-events: none;
+}
+.corner-tick.tl { top: -2px; left: -2px; border-width: 1.5px 0 0 1.5px; }
+.corner-tick.tr { top: -2px; right: -2px; border-width: 1.5px 1.5px 0 0; }
+.corner-tick.bl { bottom: -2px; left: -2px; border-width: 0 0 1.5px 1.5px; }
+.corner-tick.br { bottom: -2px; right: -2px; border-width: 0 1.5px 1.5px 0; }
+
+.pythia-plate-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border: 1px solid rgba(168, 137, 72, 0.24);
+  filter: contrast(1.03) saturate(0.96);
+}
+
+.plate-caption {
+  position: absolute;
+  bottom: 12px;
+  left: 12px;
+  right: 12px;
+  padding: 5px 8px;
+  text-align: center;
+  background: rgba(8, 7, 9, 0.82);
+  border: 1px solid rgba(168, 137, 72, 0.32);
+  font-family: var(--font-display);
+  font-size: 9px;
+  letter-spacing: 0.16em;
+  color: var(--brass-bright);
+}
+
+.altar-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.spread-selector {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.spread-option {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3px;
+  padding: 10px 12px;
+  background: var(--bg-altar);
+  border: 1px solid rgba(110, 88, 44, 0.45);
+  border-radius: 2px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.spread-option:hover {
+  border-color: var(--brass);
+}
+
+.spread-option.active {
+  background: linear-gradient(180deg, rgba(168, 137, 72, 0.15), rgba(110, 30, 42, 0.15));
+  border-color: var(--brass-bright);
+  box-shadow: inset 0 0 14px rgba(168, 137, 72, 0.08);
+}
+
+.spread-opt-title {
+  font-family: var(--font-display);
+  font-size: 11.5px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--ink-warm);
+}
+
+.spread-opt-desc {
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  font-style: italic;
+  color: var(--ink-ash);
+}
+
+.fissure-question-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--bg-altar);
+  border: 1px solid rgba(110, 88, 44, 0.52);
+  border-radius: 2px;
+  color: var(--ink-bone);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.fissure-question-input::placeholder {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.fissure-question-input:focus {
+  border-color: var(--brass-bright);
+  box-shadow: 0 0 0 1px rgba(204, 169, 98, 0.15);
+}
+
+.consult-chasm-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  width: 100%;
+  padding: 12px 18px;
+  background: linear-gradient(180deg, #27151B 0%, #160C10 100%);
+  border: 1px solid var(--brass);
+  border-radius: 2px;
+  color: var(--ink-warm);
+  font-family: var(--font-display);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    0 6px 20px rgba(0, 0, 0, 0.55),
+    inset 0 1px 0 rgba(204, 169, 98, 0.22);
+  transition: all 0.22s ease;
+}
+
+.consult-chasm-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #3A1C26 0%, #1F1016 100%);
+  border-color: var(--brass-bright);
+  box-shadow:
+    0 8px 26px rgba(158, 51, 68, 0.28),
+    inset 0 1px 0 rgba(230, 222, 200, 0.28);
+}
+
+.btn-seal-icon {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+/* ==========================================================================
+   MULTI-STAGE RITUAL SPINNER & CAST TALISMANS
+   ========================================================================== */
+
+.chasm-reading {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.ritual-stage-banner {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 11px 14px;
+  background: linear-gradient(90deg, rgba(110, 30, 42, 0.28), rgba(21, 18, 26, 0.92));
+  border: 1px solid var(--brass);
+  border-left: 3px solid var(--oxblood-bright);
+  border-radius: 2px;
+}
+
+.ritual-spinner-seal {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--brass-dim);
+  animation: spinAstrolabe 7s linear infinite;
+  box-shadow: 0 0 14px rgba(158, 51, 68, 0.45);
+  flex-shrink: 0;
+}
+
+.ritual-stage-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.ritual-stage-code {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  color: var(--brass-bright);
+  text-transform: uppercase;
+}
+
+.ritual-stage-label {
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-warm);
+}
+
+.talismans-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.talismans-meta-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.talismans-meta-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.talisman-mode-badge {
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  padding: 2px 7px;
+  color: var(--brass-bright);
+  background: rgba(168, 137, 72, 0.12);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+}
+
+.entropy-stamp {
+  font-size: 10.5px;
+  color: var(--ink-muted);
+}
+
+.entrails-toggle-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 9px;
+  background: var(--bg-altar);
+  border: 1px solid rgba(110, 88, 44, 0.48);
+  border-radius: 2px;
+  color: var(--ink-ash);
+  font-family: var(--font-serif);
+  font-size: 13.5px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.entrails-toggle-btn:hover {
+  border-color: var(--brass);
+  color: var(--ink-bone);
+}
+
+.quiet-pill {
+  font-size: 9.8px;
+  padding: 1px 5px;
+  color: var(--verdigris-bright);
+  background: var(--verdigris-wash);
+  border: 1px solid rgba(74, 139, 113, 0.45);
+  border-radius: 2px;
+}
+
+.entrails-drawer {
+  padding: 12px 14px;
+  background: #0B090E;
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+}
+
+.entrails-drawer-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.entrails-model-meta {
+  font-size: 10px;
+  color: var(--ink-muted);
+}
+
+.smoke-packet-pre {
+  margin: 0;
+  max-height: 240px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: var(--font-mono);
+  font-size: 11.2px;
+  line-height: 1.55;
+  color: var(--ink-ash);
+}
+
+/* Talismans Grid */
+.talismans-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
+}
+
+@media (max-width: 1180px) {
+  .talismans-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Talisman Card / Alcove */
+.talisman-alcove {
+  position: relative;
+  perspective: 900px;
+  min-height: 218px;
+}
+
+.talisman-flipper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.72s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.talisman-alcove.flipping .talisman-flipper {
+  transform: rotateY(180deg);
+}
+
+.talisman-face,
+.talisman-back {
+  backface-visibility: hidden;
+  border-radius: 2px;
+}
+
+.talisman-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+  border: 1px solid var(--brass);
+  background: var(--bg-obsidian) url('/static/plates/thoth-back.png') center / cover no-repeat;
+}
+
+.talisman-face {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 12px 12px 11px;
+  background:
+    linear-gradient(180deg, rgba(21, 18, 26, 0.93) 0%, rgba(12, 10, 15, 0.97) 100%),
+    url('/static/plates/thoth-back.png') center / cover no-repeat;
+  border: 1px solid var(--brass-dim);
+  box-shadow:
+    inset 0 0 0 1px rgba(204, 169, 98, 0.08),
+    0 8px 20px rgba(0, 0, 0, 0.45);
+}
+
+.talisman-face:hover {
+  border-color: var(--brass);
+}
+
+.talisman-top-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+  font-family: var(--font-mono);
+  font-size: 9.5px;
+  letter-spacing: 0.08em;
+  color: var(--brass);
+  text-transform: uppercase;
+}
+
+.talisman-center {
+  margin: 10px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.talisman-name {
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  color: var(--ink-warm);
+  margin: 0 0 3px;
+}
+
+.talisman-subtitle {
+  font-family: var(--font-serif);
+  font-size: 14.5px;
+  font-style: italic;
+  color: var(--brass-bright);
+  margin: 0;
+}
+
+.talisman-keywords {
+  font-size: 13.5px;
+  line-height: 1.35;
+  color: var(--ink-ash);
+  text-align: center;
+  margin-top: 6px;
+}
+
+.talisman-shadow {
+  margin-top: 6px;
+  padding-top: 6px;
+  border-top: 1px solid rgba(168, 137, 72, 0.14);
+  font-size: 12.5px;
+  font-style: italic;
+  color: #B47E87;
+  text-align: center;
+}
+
+/* Dynamic SVG I Ching Hexagram */
+.hexagram-stage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 6px 0 8px;
+}
+
+.hexagram-svg {
+  width: 74px;
+  height: 66px;
+  overflow: visible;
+}
+
+.hexagram-svg.mini {
+  width: 46px;
+  height: 44px;
+  opacity: 0.88;
+}
+
+.hex-mutate-arrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--oxblood-bright);
+}
+
+/* Elder Futhark Rune */
+.rune-glyph-wrap {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 2px auto 8px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(168, 137, 72, 0.14), rgba(8, 7, 9, 0.7));
+  border: 1px solid rgba(168, 137, 72, 0.35);
+}
+
+.rune-glyph {
+  font-size: 34px;
+  line-height: 1;
+  color: var(--brass-bright);
+  text-shadow: 0 0 14px rgba(204, 169, 98, 0.35);
+  display: inline-block;
+  transition: transform 0.45s ease;
+}
+
+.rune-glyph.merkstave {
+  transform: rotate(180deg);
+  color: var(--oxblood-bright);
+  text-shadow: 0 0 14px rgba(158, 51, 68, 0.48);
+}
+
+.orientation-tag.merkstave {
+  color: var(--oxblood-bright);
+}
+
+/* ==========================================================================
+   OMEN VESSEL & INTERACTIVE PYTHIA CHAT
+   ========================================================================== */
+
+.omen-vessel {
+  padding: 18px 20px 20px;
+  background: linear-gradient(180deg, rgba(21, 18, 26, 0.95) 0%, rgba(13, 11, 16, 0.98) 100%);
+  border: 1px solid var(--brass-dim);
+  border-top: 2px solid var(--brass);
+  border-radius: 2px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+.omen-vessel-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+  border-bottom: 1px solid rgba(168, 137, 72, 0.18);
+}
+
+.omen-question-epigraph {
+  margin: 5px 0 0;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--ink-ash);
+}
+
+.inscribe-btn {
+  padding: 4px 10px;
+  font-family: var(--font-display);
+  font-size: 10px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: var(--brass-bright);
+  background: rgba(168, 137, 72, 0.1);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  cursor: pointer;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: all 0.18s ease;
+}
+
+.inscribe-btn:hover {
+  background: rgba(168, 137, 72, 0.24);
+  border-color: var(--brass-bright);
+  color: var(--ink-warm);
+}
+
+/* Symbolist Rich Markdown Typography */
+.prose-symbolist {
+  color: var(--ink-bone);
+  font-family: var(--font-serif);
+  font-size: 18.5px;
+  line-height: 1.72;
+}
+
+.prose-symbolist p {
+  margin: 0 0 1em;
+}
+.prose-symbolist p:last-child {
+  margin-bottom: 0;
+}
+.prose-symbolist h1,
+.prose-symbolist h2,
+.prose-symbolist h3,
+.prose-symbolist h4 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  color: var(--brass-bright);
+  margin: 1.3em 0 0.55em;
+  line-height: 1.3;
+}
+.prose-symbolist h1 { font-size: 1.22em; }
+.prose-symbolist h2 { font-size: 1.08em; }
+.prose-symbolist h3 { font-size: 0.98em; color: var(--ink-warm); }
+
+.prose-symbolist strong {
+  font-weight: 600;
+  color: var(--ink-warm);
+}
+
+.prose-symbolist em {
+  font-style: italic;
+  color: #EFE4CA;
+}
+
+.prose-symbolist blockquote {
+  margin: 1.1em 0;
+  padding: 10px 16px;
+  background: linear-gradient(90deg, rgba(158, 51, 68, 0.12), rgba(21, 18, 26, 0.5));
+  border-left: 2px solid var(--brass);
+  color: var(--ink-warm);
+  font-style: italic;
+}
+
+.prose-symbolist ul,
+.prose-symbolist ol {
+  margin: 0.8em 0 1em;
+  padding-left: 1.4em;
+}
+.prose-symbolist li {
+  margin-bottom: 0.35em;
+}
+
+.prose-symbolist hr {
+  border: none;
+  height: 1px;
+  margin: 1.5em 0;
+  background: linear-gradient(90deg, transparent, var(--brass-dim), transparent);
+}
+
+.prose-symbolist code {
+  font-family: var(--font-mono);
+  font-size: 0.82em;
+  padding: 1px 5px;
+  background: rgba(21, 18, 26, 0.9);
+  border: 1px solid rgba(168, 137, 72, 0.22);
+  border-radius: 2px;
+  color: var(--brass-bright);
+}
+
+/* Chat Thread */
+.pythia-chat-thread {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.chat-msg {
+  border-radius: 2px;
+  padding: 13px 16px;
+}
+
+.chat-msg.user {
+  align-self: flex-end;
+  width: 90%;
+  background: rgba(28, 24, 35, 0.72);
+  border: 1px solid rgba(168, 137, 72, 0.28);
+  color: var(--ink-warm);
+}
+
+.chat-msg.assistant {
+  align-self: stretch;
+  background: rgba(17, 14, 21, 0.94);
+  border: 1px solid rgba(110, 88, 44, 0.45);
+  border-left: 2px solid var(--oxblood);
+}
+
+.chat-msg-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.chat-role-label {
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-ash);
+}
+
+.chat-msg.assistant .chat-role-label {
+  color: var(--oxblood-bright);
+}
+
+.inline-extra-cast {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+  padding: 5px 10px;
+  background: rgba(168, 137, 72, 0.1);
+  border: 1px solid var(--brass-dim);
+  border-radius: 2px;
+  font-size: 13.5px;
+  color: var(--brass-bright);
+}
+
+.chasm-error-box {
+  padding: 11px 14px;
+  background: rgba(110, 30, 42, 0.28);
+  border: 1px solid var(--oxblood);
+  border-radius: 2px;
+  color: #F3C4CC;
+  font-size: 15px;
+}
+
+/* Bottom Composer */
+.chasm-composer {
+  flex-shrink: 0;
+  padding: 10px 16px 14px;
+  background: #0C0A10;
+  border-top: 1px solid var(--brass-dim);
+}
+
+.quick-cast-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+  flex-wrap: wrap;
+}
+
+.quick-cast-hint {
+  font-size: 9.5px;
+  letter-spacing: 0.1em;
+  color: var(--ink-muted);
+  margin-right: 2px;
+}
+
+.cast-chip {
+  padding: 2px 9px;
+  font-family: var(--font-display);
+  font-size: 9.5px;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  background: var(--bg-altar);
+  color: var(--ink-ash);
+  border: 1px solid rgba(110, 88, 44, 0.48);
+  border-radius: 2px;
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+
+.cast-chip:hover {
+  border-color: var(--brass);
+  color: var(--ink-bone);
+}
+
+.cast-chip.active {
+  background: linear-gradient(180deg, rgba(158, 51, 68, 0.32), rgba(110, 30, 42, 0.24));
+  border-color: var(--brass-bright);
+  color: var(--ink-warm);
+}
+
+.composer-row {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+.chat-input {
+  flex: 1;
+  max-height: 130px;
+  padding: 9px 12px;
+  background: var(--bg-altar);
+  border: 1px solid rgba(110, 88, 44, 0.55);
+  border-radius: 2px;
+  color: var(--ink-bone);
+  font-family: var(--font-serif);
+  font-size: 17px;
+  line-height: 1.45;
+  resize: none;
+  outline: none;
+}
+
+.chat-input::placeholder {
+  color: var(--ink-muted);
+  font-style: italic;
+}
+
+.chat-input:focus {
+  border-color: var(--brass-bright);
+}
+
+.chat-send-btn {
+  height: 40px;
+  padding: 0 15px;
+  background: linear-gradient(180deg, #2A171E 0%, #170D11 100%);
+  border: 1px solid var(--brass);
+  border-radius: 2px;
+  color: var(--brass-bright);
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.chat-send-btn:hover:not(:disabled) {
+  border-color: var(--brass-bright);
+  color: var(--ink-warm);
+  background: linear-gradient(180deg, #3C1E28 0%, #221118 100%);
+}
+
+.chat-send-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+/* Toast */
+.brass-toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  padding: 8px 16px;
+  background: #17131D;
+  border: 1px solid var(--brass-bright);
+  border-radius: 2px;
+  color: var(--ink-warm);
+  font-family: var(--font-display);
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.7);
+}
+
+/* Animations */
+@keyframes spinAstrolabe {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulseEmber {
+  0%, 100% { opacity: 0.45; transform: scale(0.92); }
+  50% { opacity: 1; transform: scale(1.12); }
+}
