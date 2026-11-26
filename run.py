@@ -13,6 +13,16 @@ PROJECT_ROOT = Path(__file__).resolve().parent
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+# Guard against pythonw.exe setting sys.stdout/sys.stderr to None (breaks uvicorn formatter)
+if sys.stdout is None or sys.stderr is None:
+    _log_dir = PROJECT_ROOT / "data"
+    _log_dir.mkdir(parents=True, exist_ok=True)
+    _log_fh = open(_log_dir / "server.log", "a", encoding="utf-8")
+    if sys.stdout is None:
+        sys.stdout = _log_fh
+    if sys.stderr is None:
+        sys.stderr = _log_fh
+
 import uvicorn
 
 
